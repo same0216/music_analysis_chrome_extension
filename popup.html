@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Analyzer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎵 Music Analyzer</h1>
+    </div>
+
+    <div class="content">
+      <div class="status-indicator" id="status">
+        <span class="status-dot"></span>
+        <span class="status-text">Ready to analyze</span>
+      </div>
+
+      <button id="analyzeBtn" class="analyze-btn">
+        <span class="btn-icon">▶</span>
+        <span class="btn-text">Start Analysis</span>
+      </button>
+
+      <div class="results" id="results" style="display: none;">
+        <div class="result-card bpm-card">
+          <div class="result-label">BPM</div>
+          <div class="result-value" id="bpmValue">--</div>
+          <div class="result-sublabel">Beats per minute</div>
+        </div>
+
+        <div class="result-card key-card">
+          <div class="result-label">Key</div>
+          <div class="result-value" id="keyValue">--</div>
+          <div class="result-sublabel">Camelot notation</div>
+        </div>
+
+        <div class="result-details">
+          <div class="detail-item">
+            <span class="detail-label">Musical Key:</span>
+            <span class="detail-value" id="musicalKey">--</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Mode:</span>
+            <span class="detail-value" id="mode">--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="visualizer" id="visualizer" style="display: none;">
+        <canvas id="waveform"></canvas>
+      </div>
+
+      <div class="error-message" id="error" style="display: none;"></div>
+    </div>
+
+    <div class="footer">
+      <p class="tip">Click "Start Analysis" to detect BPM and key of the current tab's audio</p>
+    </div>
+  </div>
+
+  <script src="audio-analyzer.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
