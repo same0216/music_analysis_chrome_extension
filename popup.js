@@ -1,5 +1,12 @@
-// Popup UI Controller
+/**
+ * ポップアップUIコントローラー
+ * @file popup.js
+ * @description 拡張機能のポップアップUIを制御し、音声分析を管理します
+ */
+
+/** @type {AudioAnalyzer|null} オーディオアナライザーのインスタンス */
 let analyzer = null;
+/** @type {boolean} 分析中かどうかのフラグ */
 let isAnalyzing = false;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,6 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     await startAnalysis();
   });
 
+  /**
+   * 音声分析を開始する
+   * @async
+   * @function startAnalysis
+   * @description タブの音声をキャプチャしてBPMとキーを分析します
+   */
   async function startAnalysis() {
     try {
       isAnalyzing = true;
@@ -26,33 +39,33 @@ document.addEventListener('DOMContentLoaded', () => {
       hideError();
       hideResults();
 
-      // Request tab capture permission
+      // タブキャプチャの許可をリクエスト
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-      // Start tab audio capture
+      // タブ音声のキャプチャを開始
       chrome.tabCapture.capture({ audio: true }, async (stream) => {
         if (!stream) {
-          throw new Error('Could not capture audio. Make sure audio is playing in the tab.');
+          throw new Error('音声をキャプチャできませんでした。タブで音声が再生されていることを確認してください。');
         }
 
         try {
           analyzer = new AudioAnalyzer();
           await initializeAnalyzer(stream);
 
-          statusText.textContent = 'Analyzing BPM...';
+          statusText.textContent = 'BPMを分析中...';
           const bpm = await analyzer.analyzeBPM(8000);
 
-          statusText.textContent = 'Analyzing musical key...';
+          statusText.textContent = '音楽キーを分析中...';
           const keyData = await analyzer.analyzeKey();
 
           displayResults(bpm, keyData);
           updateUI('complete');
 
-          // Stop the stream after analysis
+          // 分析後にストリームを停止
           stream.getTracks().forEach(track => track.stop());
 
         } catch (error) {
-          console.error('Analysis error:', error);
+          console.error('分析エラー:', error);
           showError(error.message);
           updateUI('error');
           if (stream) {
@@ -64,13 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
     } catch (error) {
-      console.error('Error:', error);
+      console.error('エラー:', error);
       showError(error.message);
       updateUI('error');
       isAnalyzing = false;
     }
   }
 
+  /**
+   * アナライザーを初期化する
+   * @async
+   * @function initializeAnalyzer
+   * @param {MediaStream} stream - キャプチャした音声ストリーム
+   * @description AudioContextを作成し、ストリームをアナライザーに接続します
+   */
   async function initializeAnalyzer(stream) {
     const audioContext = new AudioContext();
     analyzer.audioContext = audioContext;
@@ -80,10 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzer.source = audioContext.createMediaStreamSource(stream);
     analyzer.source.connect(analyzer.analyser);
 
-    // Start visualizer
+    // ビジュアライザーを開始
     startVisualizer();
   }
 
+  /**
+   * 波形ビジュアライザーを開始する
+   * @function startVisualizer
+   * @description キャンバスに音声波形をリアルタイムで描画します
+   */
   function startVisualizer() {
     const canvas = document.getElementById('waveform');
     const canvasCtx = canvas.getContext('2d');
@@ -131,6 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
     draw();
   }
 
+  /**
+   * 分析を停止する
+   * @function stopAnalysis
+   * @description アナライザーをクリーンアップしてUIを初期状態に戻します
+   */
   function stopAnalysis() {
     isAnalyzing = false;
     if (analyzer) {
@@ -140,6 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI('ready');
   }
 
+  /**
+   * UIの状態を更新する
+   * @function updateUI
+   * @param {string} state - UI状態（'analyzing'|'complete'|'error'|'ready'）
+   * @description 分析状態に応じてボタンとステータス表示を更新します
+   */
   function updateUI(state) {
     const btnIcon = analyzeBtn.querySelector('.btn-icon');
     const btnText = analyzeBtn.querySelector('.btn-text');
@@ -151,28 +187,35 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'analyzing':
         statusIndicator.classList.add('analyzing');
         analyzeBtn.classList.add('analyzing');
-        statusText.textContent = 'Capturing audio...';
+        statusText.textContent = '音声をキャプチャ中...';
         btnIcon.textContent = '⏹';
-        btnText.textContent = 'Stop Analysis';
+        btnText.textContent = '分析を停止';
         break;
       case 'complete':
-        statusText.textContent = 'Analysis complete';
+        statusText.textContent = '分析完了';
         btnIcon.textContent = '▶';
-        btnText.textContent = 'Analyze Again';
+        btnText.textContent = '再度分析';
         break;
       case 'error':
         statusIndicator.classList.add('error');
-        statusText.textContent = 'Analysis failed';
+        statusText.textContent = '分析失敗';
         btnIcon.textContent = '▶';
-        btnText.textContent = 'Try Again';
+        btnText.textContent = '再試行';
         break;
       default: // ready
-        statusText.textContent = 'Ready to analyze';
+        statusText.textContent = '分析準備完了';
         btnIcon.textContent = '▶';
-        btnText.textContent = 'Start Analysis';
+        btnText.textContent = '分析開始';
     }
   }
 
+  /**
+   * 分析結果を表示する
+   * @function displayResults
+   * @param {number} bpm - 検出されたBPM値
+   * @param {{key: string, mode: string, camelot: string, fullName: string}} keyData - キー情報
+   * @description BPMとキー情報を画面に表示し、アニメーションを適用します
+   */
   function displayResults(bpm, keyData) {
     document.getElementById('bpmValue').textContent = bpm;
     document.getElementById('keyValue').textContent = keyData.camelot;
@@ -181,10 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resultsDiv.style.display = 'block';
 
-    // Animate the values
+    // 値をアニメーション
     animateValue('bpmValue', 0, bpm, 1000);
   }
 
+  /**
+   * 数値をアニメーション表示する
+   * @function animateValue
+   * @param {string} elementId - アニメーション対象の要素ID
+   * @param {number} start - 開始値
+   * @param {number} end - 終了値
+   * @param {number} duration - アニメーション時間（ミリ秒）
+   * @description 指定された要素の数値を滑らかにアニメーションします
+   */
   function animateValue(elementId, start, end, duration) {
     const element = document.getElementById(elementId);
     const range = end - start;
@@ -204,15 +256,31 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(update);
   }
 
+  /**
+   * エラーメッセージを表示する
+   * @function showError
+   * @param {string} message - エラーメッセージ
+   * @description エラーメッセージをユーザーに表示します
+   */
   function showError(message) {
     errorDiv.textContent = message;
     errorDiv.style.display = 'block';
   }
 
+  /**
+   * エラーメッセージを非表示にする
+   * @function hideError
+   * @description エラー表示エリアを非表示にします
+   */
   function hideError() {
     errorDiv.style.display = 'none';
   }
 
+  /**
+   * 結果表示を非表示にする
+   * @function hideResults
+   * @description 結果とビジュアライザーを非表示にします
+   */
   function hideResults() {
     resultsDiv.style.display = 'none';
     visualizerDiv.style.display = 'none';

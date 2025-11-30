@@ -1,65 +1,64 @@
-# Music BPM & Key Analyzer Chrome Extension
+# Music BPM & Key Analyzer Chrome拡張機能
 
-A modern Chrome extension that analyzes the BPM (Beats Per Minute) and musical key of audio playing in your current browser tab.
+ブラウザのタブで再生中の音楽のBPM（テンポ）と音楽キーを自動分析するモダンなChrome拡張機能です。
 
-## Features
+## 機能
 
-- 🎵 **BPM Detection**: Automatically detects the tempo of music playing in your tab
-- 🎹 **Key Detection**: Identifies the musical key using the Camelot Wheel notation (e.g., 8B, 5A)
-- 🎨 **Modern UI**: Beautiful, gradient-based interface with smooth animations
-- 📊 **Real-time Visualization**: Audio waveform visualization during analysis
-- ⚡ **Fast Analysis**: Results in seconds using advanced audio processing algorithms
+- 🎵 **BPM検出**: タブで再生中の音楽のテンポを自動検出
+- 🎹 **キー検出**: Camelotホイール記法（8B、5Aなど）で音楽キーを識別
+- 🎨 **モダンなUI**: グラデーションとスムーズなアニメーションを備えた美しいインターフェース
+- 📊 **リアルタイム可視化**: 分析中の音声波形をリアルタイム表示
+- ⚡ **高速分析**: 先進的な音声処理アルゴリズムにより数秒で結果を表示
 
-## Installation
+## インストール方法
 
-1. Clone or download this repository
-2. Add icon files to the `icons/` directory:
+1. このリポジトリをクローンまたはダウンロード
+2. `icons/` ディレクトリにアイコンファイルを追加:
    - icon16.png (16x16)
    - icon48.png (48x48)
    - icon128.png (128x128)
-3. Open Chrome and navigate to `chrome://extensions/`
-4. Enable "Developer mode" in the top right
-5. Click "Load unpacked" and select the extension directory
-6. The extension icon should appear in your toolbar
+3. Chromeで `chrome://extensions/` を開く
+4. 右上の「デベロッパーモード」を有効化
+5. 「パッケージ化されていない拡張機能を読み込む」をクリックして、拡張機能のディレクトリを選択
+6. ツールバーに拡張機能アイコンが表示されます
 
-## Usage
+## 使い方
 
-1. Navigate to a webpage with audio playing (YouTube, Spotify Web Player, SoundCloud, etc.)
-2. Click the extension icon in your toolbar
-3. Click "Start Analysis" button
-4. Wait a few seconds while the extension analyzes the audio
-5. View the BPM and musical key results
+1. 音楽が再生されているウェブページ（YouTube、Spotify Web Player、SoundCloudなど）を開く
+2. ツールバーの拡張機能アイコンをクリック
+3. 「分析開始」ボタンをクリック
+4. 数秒待つとBPMとキーの結果が表示されます
 
-## Technical Details
+## 技術詳細
 
-### BPM Detection
-The extension uses a peak detection algorithm that:
-- Captures audio samples from the active tab
-- Analyzes the RMS energy of the audio signal
-- Detects peaks in the energy levels
-- Calculates the median interval between peaks
-- Converts to BPM with range normalization (60-180 BPM)
+### BPM検出
+拡張機能は以下のピーク検出アルゴリズムを使用します:
+- アクティブなタブから音声サンプルをキャプチャ
+- 音声信号のRMSエネルギーを分析
+- エネルギーレベルのピークを検出
+- ピーク間の中央値間隔を計算
+- 範囲正規化（60-180 BPM）によりBPMに変換
 
-### Key Detection
-The musical key is detected using:
-- FFT (Fast Fourier Transform) analysis
-- Chromagram calculation (12-bin pitch class profile)
-- Krumhansl-Schmuckler key-finding algorithm
-- Correlation with major and minor key profiles
-- Camelot Wheel notation mapping
+### キー検出
+音楽キーは以下を使用して検出されます:
+- FFT（高速フーリエ変換）分析
+- クロマグラム計算（12ビンのピッチクラスプロファイル）
+- Krumhansl-Schmucklerキー検出アルゴリズム
+- メジャーおよびマイナーキープロファイルとの相関
+- Camelotホイール記法へのマッピング
 
-### Technology Stack
-- **Manifest V3**: Latest Chrome extension format
-- **Web Audio API**: For audio capture and analysis
-- **Chrome Tab Capture API**: For capturing tab audio
-- **Vanilla JavaScript**: No dependencies required
-- **CSS3**: Modern gradients and animations
+### 技術スタック
+- **Manifest V3**: 最新のChrome拡張機能フォーマット
+- **Web Audio API**: 音声キャプチャと分析
+- **Chrome Tab Capture API**: タブ音声のキャプチャ
+- **バニラJavaScript**: 依存関係なし
+- **CSS3**: モダンなグラデーションとアニメーション
 
-## Camelot Wheel Reference
+## Camelotホイール対応表
 
-The Camelot Wheel is a music notation system for harmonic mixing:
+Camelotホイールはハーモニックミキシング用の音楽記法システムです:
 
-| Key | Camelot | Key | Camelot |
+| キー | Camelot | キー | Camelot |
 |-----|---------|-----|---------|
 | C major | 8B | A minor | 8A |
 | G major | 9B | E minor | 9A |
@@ -74,67 +73,67 @@ The Camelot Wheel is a music notation system for harmonic mixing:
 | Bb major | 6B | G minor | 6A |
 | F major | 7B | D minor | 7A |
 
-## Browser Compatibility
+## ブラウザ互換性
 
-- Chrome 88+
-- Edge 88+
-- Other Chromium-based browsers with Manifest V3 support
+- Chrome 88以降
+- Edge 88以降
+- Manifest V3をサポートするその他のChromiumベースのブラウザ
 
-## Permissions
+## 必要なパーミッション
 
-The extension requires:
-- `activeTab`: To access the current tab
-- `tabCapture`: To capture audio from tabs
-- `scripting`: To inject content scripts
+拡張機能は以下を必要とします:
+- `activeTab`: 現在のタブへのアクセス
+- `tabCapture`: タブから音声をキャプチャ
+- `scripting`: コンテンツスクリプトの挿入
 
-## Limitations
+## 制限事項
 
-- Only works with tabs that have audio playing
-- Requires audio to be actively playing during analysis
-- Best results with consistent, beat-driven music
-- May not work with all websites due to audio restrictions
+- 音声が再生されているタブでのみ動作します
+- 分析中は音声が再生されている必要があります
+- 一定のビートを持つ音楽で最良の結果が得られます
+- 音声制限により一部のウェブサイトでは動作しない場合があります
 
-## Development
+## 開発
 
-### File Structure
+### ファイル構造
 ```
 music_analysis_chrome_extension/
-├── manifest.json          # Extension configuration
-├── popup.html            # Extension popup UI
-├── popup.js              # Popup logic and UI controller
-├── styles.css            # Modern styling
-├── audio-analyzer.js     # BPM and key detection algorithms
-├── background.js         # Background service worker
-├── content.js            # Content script
-├── icons/                # Extension icons
+├── manifest.json          # 拡張機能の設定
+├── popup.html            # 拡張機能ポップアップUI
+├── popup.js              # ポップアップロジックとUIコントローラー
+├── styles.css            # モダンなスタイリング
+├── audio-analyzer.js     # BPMとキー検出アルゴリズム
+├── background.js         # バックグラウンドサービスワーカー
+├── content.js            # コンテンツスクリプト
+├── icons/                # 拡張機能アイコン
 │   ├── icon16.png
 │   ├── icon48.png
 │   └── icon128.png
 └── README.md
 ```
 
-### Testing
-1. Test on various music streaming sites (YouTube, Spotify, SoundCloud)
-2. Try different genres and tempos
-3. Verify key detection accuracy with known songs
-4. Check UI responsiveness and animations
+### テスト
+1. 様々な音楽ストリーミングサイトでテスト（YouTube、Spotify、SoundCloud）
+2. 異なるジャンルとテンポを試す
+3. 既知の曲でキー検出の精度を確認
+4. UIの応答性とアニメーションを確認
 
-## Future Enhancements
+## 今後の機能拡張
 
-- [ ] History of analyzed tracks
-- [ ] Export results to CSV/JSON
-- [ ] Integration with music databases (Spotify API, etc.)
-- [ ] Waveform analysis visualization
-- [ ] Batch analysis of playlists
-- [ ] Tempo adjustment controls
+- [ ] 分析したトラックの履歴
+- [ ] 結果をCSV/JSONにエクスポート
+- [ ] 音楽データベースとの統合（Spotify API等）
+- [ ] 波形分析の視覚化
+- [ ] プレイリストの一括分析
+- [ ] テンポ調整コントロール
 
-## License
+## ライセンス
 
-MIT License - Feel free to use and modify as needed.
+MIT License - 必要に応じて自由に使用および変更してください。
 
-## Credits
+## クレジット
 
-Developed using:
-- Krumhansl-Schmuckler key-finding algorithm
-- Camelot Wheel harmonic mixing system
-- Web Audio API specifications
+以下を使用して開発されました:
+- Krumhansl-Schmucklerキー検出アルゴリズム
+- Camelotホイールハーモニックミキシングシステム
+- Web Audio API仕様

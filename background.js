@@ -1,16 +1,30 @@
-// Background Service Worker
+/**
+ * バックグラウンドサービスワーカー
+ * @file background.js
+ * @description Chrome拡張機能のバックグラウンドプロセスを管理します
+ */
+
+// 拡張機能インストール時の処理
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Music BPM & Key Analyzer extension installed');
+  console.log('Music BPM & Key Analyzer拡張機能がインストールされました');
 });
 
-// Handle messages from content script or popup
+// コンテンツスクリプトまたはポップアップからのメッセージを処理
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'captureTab') {
     handleTabCapture(sender.tab.id, sendResponse);
-    return true; // Keep the message channel open for async response
+    return true; // 非同期レスポンスのためにメッセージチャネルを開いたままにする
   }
 });
 
+/**
+ * タブの音声キャプチャを処理する
+ * @async
+ * @function handleTabCapture
+ * @param {number} tabId - キャプチャするタブのID
+ * @param {Function} sendResponse - レスポンスを送信する関数
+ * @description 指定されたタブの音声をキャプチャします
+ */
 async function handleTabCapture(tabId, sendResponse) {
   try {
     const stream = await chrome.tabCapture.capture({
@@ -21,17 +35,17 @@ async function handleTabCapture(tabId, sendResponse) {
     if (stream) {
       sendResponse({ success: true, stream: stream });
     } else {
-      sendResponse({ success: false, error: 'Could not capture tab audio' });
+      sendResponse({ success: false, error: 'タブの音声をキャプチャできませんでした' });
     }
   } catch (error) {
     sendResponse({ success: false, error: error.message });
   }
 }
 
-// Listen for tab updates to detect audio playing
+// 音声再生を検出するためにタブの更新をリッスン
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.audible !== undefined) {
-    // Tab audio state changed
-    console.log(`Tab ${tabId} audio: ${changeInfo.audible ? 'playing' : 'stopped'}`);
+    // タブの音声状態が変更された
+    console.log(`Tab ${tabId} 音声: ${changeInfo.audible ? '再生中' : '停止'}`);
   }
 });

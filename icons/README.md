@@ -1,10 +1,14 @@
-# Icons
+# アイコン
 
-Please add the following icon files:
-- icon16.png (16x16 pixels)
-- icon48.png (48x48 pixels)
-- icon128.png (128x128 pixels)
+以下のアイコンファイルを追加してください:
+- icon16.png (16x16ピクセル)
+- icon48.png (48x48ピクセル)
+- icon128.png (128x128ピクセル)
 
-You can create simple music note icons or use a music/waveform design.
+音符のアイコンや波形デザインを使用することをおすすめします。
 
-For now, you can use any music-related icons or create them using an icon generator.
+プロジェクトのルートディレクトリにある `generate-icons.html` をブラウザで開くことで、
+簡単にアイコンを生成できます。「Download All」ボタンをクリックして、
+ダウンロードした3つのPNGファイルをこのフォルダに配置してください。
+
+または、お好みのアイコンジェネレーターを使用して、音楽関連のアイコンを作成することもできます。
